@@ -1,0 +1,79 @@
+<div class="container scheduled-list my-5">
+  <h2 class="mb-4"><i class="bi bi-list-check"></i> Modèles de Factures Périodiques</h2>
+
+  <div *ngIf="scheduledInvoices.length === 0 && !errorMessage" class="alert alert-info">
+    Aucun modèle enregistré.
+  </div>
+
+  <div class="table-responsive shadow-sm rounded">
+    <table *ngIf="scheduledInvoices.length > 0" class="table table-bordered table-hover align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>Client</th>
+          <th>Montant Total</th>
+          <th>Fréquence</th>
+          <th>Dernière Génération</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of scheduledInvoices">
+          <td>{{ invoice.client?.nameEnterprise }}</td>
+          <td class="fw-bold text-success">
+            {{ invoice.amount + invoice.fees_disbursements - invoice.deposit + invoice.amount * invoice.tva / 100 }} DH
+          </td>
+          <td><span class="badge bg-primary">{{ invoice.frequency }}</span></td>
+          <td>{{ invoice.lastGenerated | date:'short' }}</td>
+          <td>
+            <span class="badge" [ngClass]="invoice.active ? 'bg-success' : 'bg-secondary'">
+              {{ invoice.active ? 'Actif' : 'Désactivé' }}
+            </span>
+          </td>
+          <td>
+            <div class="btn-group">
+              <button class="btn btn-sm btn-outline-info" (click)="previewTemplate(invoice.id)">
+                <i class="bi bi-eye"></i>
+              </button>
+              <a [routerLink]="['/edit-template', invoice.id]" class="btn btn-sm btn-outline-warning">
+                <i class="bi bi-pencil-square"></i>
+              </a>
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteTemplate(invoice.id)">
+                <i class="bi bi-trash"></i>
+              </button>
+              <button
+                class="btn btn-sm"
+                [ngClass]="invoice.active ? 'btn-outline-secondary' : 'btn-outline-success'"
+                (click)="toggleActivation(invoice)"
+              >
+                <i class="bi" [ngClass]="invoice.active ? 'bi-slash-circle' : 'bi-check-circle'"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+
+  <!-- ✅ Preview Box -->
+  <div class="modal d-block" tabindex="-1" *ngIf="previewInvoice">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content p-3">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="bi bi-receipt"></i> Prévisualisation de la facture</h5>
+          <button type="button" class="btn-close" aria-label="Fermer" (click)="closePreview()"></button>
+        </div>
+        <div class="modal-body">
+          <pre class="bg-light p-3 rounded border">{{ previewInvoice | json }}</pre>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closePreview()">
+            <i class="bi bi-x-circle"></i> Fermer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

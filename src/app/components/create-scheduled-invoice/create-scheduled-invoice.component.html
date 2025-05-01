@@ -1,0 +1,119 @@
+<div class="container mt-4 p-4 shadow-sm bg-white rounded">
+  <h2 class="mb-4">
+    <i class="bi" [ngClass]="editMode ? 'bi-pencil-square' : 'bi-journal-plus'"></i>
+    {{ editMode ? 'Modifier un Modèle' : 'Nouveau Modèle de Facture' }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <div class="row g-3">
+
+      <!-- Client -->
+      <div class="col-md-6">
+        <label class="form-label">Client</label>
+        <select class="form-select"
+                formControlName="publicId"
+                [ngClass]="{
+                  'is-valid': form.get('publicId')?.valid && form.get('publicId')?.touched,
+                  'is-invalid': form.get('publicId')?.invalid && form.get('publicId')?.touched
+                }">
+          <option value="">-- Sélectionner un client --</option>
+          <option *ngFor="let client of clients" [value]="client.publicId">{{ client.name }}</option>
+        </select>
+      </div>
+
+      <!-- Description -->
+      <div class="col-md-6">
+        <label class="form-label">Description</label>
+        <input type="text" class="form-control"
+               formControlName="projectDescription"
+               [ngClass]="{
+                 'is-valid': form.get('projectDescription')?.valid && form.get('projectDescription')?.touched,
+                 'is-invalid': form.get('projectDescription')?.invalid && form.get('projectDescription')?.touched
+               }" />
+      </div>
+
+      <!-- Montant HT -->
+      <div class="col-md-6">
+        <label class="form-label">Montant HT</label>
+        <input type="number" class="form-control"
+               formControlName="amount"
+               [ngClass]="{
+                 'is-valid': form.get('amount')?.valid && form.get('amount')?.touched,
+                 'is-invalid': form.get('amount')?.invalid && form.get('amount')?.touched
+               }" />
+      </div>
+
+      <!-- Acompte -->
+      <div class="col-md-6">
+        <label class="form-label">Acompte</label>
+        <input type="number" class="form-control"
+               formControlName="deposit"
+               [ngClass]="{
+                 'is-valid': form.get('deposit')?.valid && form.get('deposit')?.touched,
+                 'is-invalid': form.get('deposit')?.invalid && form.get('deposit')?.touched
+               }" />
+      </div>
+
+      <!-- TVA -->
+      <div class="col-md-6">
+        <label class="form-label">TVA (%)</label>
+        <input type="number" class="form-control"
+               formControlName="tva"
+               [ngClass]="{
+                 'is-valid': form.get('tva')?.valid && form.get('tva')?.touched,
+                 'is-invalid': form.get('tva')?.invalid && form.get('tva')?.touched
+               }" />
+      </div>
+
+      <!-- Frais -->
+      <div class="col-md-6">
+        <label class="form-label">Frais & Débours</label>
+        <input type="number" class="form-control"
+               formControlName="fees_disbursements"
+               [ngClass]="{
+                 'is-valid': form.get('fees_disbursements')?.valid && form.get('fees_disbursements')?.touched,
+                 'is-invalid': form.get('fees_disbursements')?.invalid && form.get('fees_disbursements')?.touched
+               }" />
+      </div>
+
+      <!-- Fréquence -->
+      <div class="col-md-6">
+        <label class="form-label">Fréquence</label>
+        <select class="form-select"
+                formControlName="frequency"
+                [ngClass]="{
+                  'is-valid': form.get('frequency')?.valid && form.get('frequency')?.touched,
+                  'is-invalid': form.get('frequency')?.invalid && form.get('frequency')?.touched
+                }">
+          <option value="MINUTELY">Chaque Minute</option>
+          <option value="WEEKLY">Hebdomadaire</option>
+          <option value="MONTHLY">Mensuelle</option>
+          <option value="QUARTERLY">Trimestrielle</option>
+          <option value="ANNUALLY">Annuelle</option>
+        </select>
+      </div>
+
+      <!-- Délai -->
+      <div class="col-md-6">
+        <label class="form-label">Délai de paiement (jours)</label>
+        <input type="number" class="form-control"
+               formControlName="delaiEnJours"
+               [ngClass]="{
+                 'is-valid': form.get('delaiEnJours')?.valid && form.get('delaiEnJours')?.touched,
+                 'is-invalid': form.get('delaiEnJours')?.invalid && form.get('delaiEnJours')?.touched
+               }" />
+      </div>
+
+    </div>
+
+    <!-- Submit -->
+    <div class="mt-4">
+      <button type="submit" class="btn btn-primary">
+        {{ editMode ? '💾 Enregistrer' : '➕ Créer le modèle' }}
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="success" class="alert alert-success mt-3">{{ success }}</div>
+  <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+</div>

@@ -1,0 +1,73 @@
+<form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="p-4 shadow-sm bg-white rounded needs-validation" novalidate>
+  <h4 class="mb-4"><i class="bi bi-file-earmark-plus"></i> Nouvelle Facture</h4>
+
+  <!-- Ligne 1 -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label class="form-label">Client</label>
+      <select class="form-select" formControlName="publicId" [ngClass]="{'is-invalid': isInvalid('publicId')}">
+        <option value="">-- Sélectionner un client --</option>
+        <option *ngFor="let client of clients" [value]="client.publicId">{{ client.nameEnterprise }}</option>
+      </select>
+      <div class="invalid-feedback">Veuillez sélectionner un client.</div>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Description du projet</label>
+      <input type="text" class="form-control" formControlName="projectDescription" [ngClass]="{'is-invalid': isInvalid('projectDescription')}" />
+      <div class="invalid-feedback">La description est requise.</div>
+    </div>
+  </div>
+
+  <!-- Ligne 2 -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label class="form-label">Montant HT</label>
+      <input type="number" class="form-control" formControlName="amount" [ngClass]="{'is-invalid': isInvalid('amount')}" />
+      <div class="invalid-feedback">Montant requis.</div>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">TVA (%)</label>
+      <input type="number" class="form-control" formControlName="tva" [ngClass]="{'is-invalid': isInvalid('tva')}" />
+      <div class="invalid-feedback">TVA requise.</div>
+    </div>
+  </div>
+
+  <!-- Ligne 3 -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label class="form-label">Frais & Débours</label>
+      <input type="number" class="form-control" formControlName="fees_disbursements" />
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Acompte</label>
+      <input type="number" class="form-control" formControlName="deposit" />
+    </div>
+  </div>
+
+  <!-- Ligne 4 -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <label class="form-label">Date d’échéance</label>
+      <input type="datetime-local" class="form-control" formControlName="dueDate" />
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Date prévue d'envoi</label>
+      <input type="datetime-local" class="form-control" formControlName="expectedDateTime" />
+    </div>
+  </div>
+
+  <!-- Bouton -->
+  <div class="d-grid gap-2">
+    <button type="submit" class="btn btn-primary">
+      {{ editMode ? '💾 Enregistrer les modifications' : '➕ Créer la facture' }}
+    </button>
+  </div>
+</form>
+
+<!-- Messages -->
+<div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+<div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>

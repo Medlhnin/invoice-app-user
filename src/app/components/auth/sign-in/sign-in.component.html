@@ -1,0 +1,35 @@
+<div class="signin-container">
+    <h2>Sign In</h2>
+    <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-group">
+          <fa-icon [icon]="faUser"></fa-icon>
+          <input id="username" formControlName="username" type="text" placeholder="Enter username" />
+        </div>
+        <small *ngIf="signInForm.get('username')?.invalid && signInForm.get('username')?.touched" class="error">
+          Username is required.
+        </small>
+      </div>
+  
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-group">
+          <fa-icon [icon]="faLock"></fa-icon>
+          <input id="password" formControlName="password" type="password" placeholder="Enter password" />
+        </div>
+        <small *ngIf="signInForm.get('password')?.invalid && signInForm.get('password')?.touched" class="error">
+          Password is required.
+        </small>
+      </div>
+  
+      <!-- Submit Button -->
+      <button type="submit" [disabled]="signInForm.invalid">Sign In</button>
+    </form>
+  
+    <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+</div>
+  

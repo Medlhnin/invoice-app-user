@@ -1,0 +1,32 @@
+<div class="card shadow-sm p-4 mx-auto mt-5" style="max-width: 600px;" *ngIf="!loading && user">
+    <div class="text-center mb-4">
+      <i class="bi bi-person-circle display-1 text-primary"></i>
+      <h2 class="mt-2">Mon Profil</h2>
+    </div>
+  
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><strong>Prénom :</strong> {{ user.firstname }}</li>
+      <li class="list-group-item"><strong>Nom :</strong> {{ user.lastname }}</li>
+      <li class="list-group-item"><strong>Email :</strong> {{ user.email }}</li>
+      <li class="list-group-item"><strong>Nom d'utilisateur :</strong> {{ user.username }}</li>
+    </ul>
+  
+    <div class="mt-4 d-flex justify-content-center gap-2 flex-wrap">
+      <button class="btn btn-primary" (click)="onChangePassword()">
+        <i class="bi bi-shield-lock"></i> Modifier le mot de passe
+      </button>
+      <button class="btn btn-outline-secondary" (click)="onForgotPassword()">
+        <i class="bi bi-question-circle"></i> Mot de passe oublié
+      </button>
+    </div>
+</div>
+  
+<div *ngIf="loading" class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+    <p class="mt-2">Chargement du profil...</p>
+</div>
+  
+<div *ngIf="error" class="alert alert-danger text-center mt-4">{{ error }}</div>
+  

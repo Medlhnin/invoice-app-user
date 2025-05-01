@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg navbar-dark px-4 py-2" style="background-color: #0d6efd;">
+  <a class="navbar-brand fw-bold text-white" routerLink="/invoices">
+    <i class="bi bi-receipt"></i> App Facturation
+  </a>
+
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse"  data-bs-target="#navbarNav"
+    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav me-auto">
+
+      <!-- Documents -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+          <i class="bi bi-folder"></i> Documents
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" routerLink="/invoices"><i class="bi bi-file-earmark-text"></i> Factures</a></li>
+          <li><a class="dropdown-item" routerLink="/clients"><i class="bi bi-people"></i> Clients</a></li>
+          <li><a class="dropdown-item" routerLink="/scheduled-templates"><i class="bi bi-calendar3"></i> Templates</a></li>
+        </ul>
+      </li>
+
+      <!-- Création -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+          <i class="bi bi-plus-circle"></i> Création
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" routerLink="/create-invoice"><i class="bi bi-file-plus"></i> Nouvelle Facture</a></li>
+          <li><a class="dropdown-item" routerLink="/create-client"><i class="bi bi-person-plus"></i> Nouveau Client</a></li>
+          <li><a class="dropdown-item" routerLink="/create-template"><i class="bi bi-layout-text-sidebar-reverse"></i> Nouveau Template</a></li>
+        </ul>
+      </li>
+
+      <!-- Paramètres -->
+      <li class="nav-item">
+        <a class="nav-link text-white" routerLink="/settings"><i class="bi bi-gear"></i> Paramètres</a>
+      </li>
+    </ul>
+
+    <button class="btn btn-outline-light" (click)="logout()">
+      <i class="bi bi-box-arrow-right"></i> Déconnexion
+    </button>
+  </div>
+</nav>

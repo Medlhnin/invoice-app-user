@@ -1,0 +1,126 @@
+<h2 class="mb-4"><i class="bi bi-receipt"></i> Liste des factures</h2>
+
+<div class="input-group mb-3">
+  <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+  <input type="text" class="form-control" [(ngModel)]="searchTerm" placeholder="Rechercher par client ou description..." />
+</div>
+
+<div class="row mb-3">
+  <div class="col-md-4">
+    <select class="form-select" [(ngModel)]="statusFilter">
+      <option value="">Tous les statuts</option>
+      <option *ngFor="let status of invoiceStatuses" [value]="status">{{ status }}</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <input type="date" class="form-control" [(ngModel)]="dateFilter" />
+  </div>
+</div>
+
+<div class="table-responsive shadow-sm rounded">
+  <table *ngIf="filteredInvoices.length > 0; else noInvoices" class="table table-hover table-bordered align-middle">
+    <thead class="table-dark text-center">
+      <tr>
+        <th>Client</th>
+        <th class="description-cell">Description</th>
+        <th>Montant HT</th>
+        <th>TVA</th>
+        <th>Frais & Débours</th>
+        <th>Acompte</th>
+        <th>Total</th>
+        <th>Date</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let invoice of filteredInvoices" class="text-center">
+        <td>{{ invoice.client?.nameEnterprise }}</td>
+        <td class="description-cell" [title]="invoice.projectDescription">{{ invoice.projectDescription }}</td>
+        <td>{{ invoice.amount }} DH</td>
+        <td>{{ invoice.tva }} %</td>
+        <td>{{ invoice.fees_disbursements }} DH</td>
+        <td>{{ invoice.deposit }} DH</td>
+        <td class="fw-bold text-success">
+          {{ invoice.amount + invoice.fees_disbursements + (invoice.amount * invoice.tva / 100) - invoice.deposit }} DH
+        </td>
+        <td>{{ invoice.dateFacture | date: 'short' }}</td>
+        <td><span class="badge bg-secondary">{{ invoice.invoiceStatus }}</span></td>
+        <td>
+          <div class="btn-group">
+            
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteInvoice(invoice.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-success" (click)="openPaymentPopup(invoice)">
+              <i class="bi bi-cash-coin"></i>
+            </button>
+            <!-- <button class="btn btn-sm btn-outline-primary" (click)="validateInvoice(invoice.id)" [disabled]="invoice.invoiceStatus !== 'Draft'">
+              <i class="bi bi-check2-square"></i>
+            </button> -->
+            <button class="btn btn-sm btn-outline-primary" (click)="editInvoice(invoice.id)">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noInvoices>
+  <div class="alert alert-info mt-4">Aucune facture disponible pour le moment.</div>
+</ng-template>
+
+<div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+
+<!-- 🧾 Pop-up Paiement -->
+<div class="modal d-block" tabindex="-1" *ngIf="selectedInvoice">
+  <div class="modal-dialog">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-wallet2"></i> Paiement de la facture</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closePopup()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="paymentForm" (ngSubmit)="submitPayment()">
+          <div class="mb-3">
+            <label class="form-label">Méthode de paiement:</label>
+            <select formControlName="paymentMethod" class="form-select">
+              <option value="TRANSFER">Virement</option>
+              <option value="EXCHANGE">Lettre</option>
+              <option value="CHEQUE">Chèque</option>
+              <option value="CASH"> Espèce</option>
+            </select>
+          </div>
+
+          <div *ngIf="paymentForm.value.paymentMethod === 'CHEQUE'">
+            <div class="mb-3">
+              <label class="form-label">Numéro de chèque:</label>
+              <input type="number" class="form-control" formControlName="cheque_number" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Numéro de remise:</label>
+              <input type="number" class="form-control" formControlName="remise_number" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">La date de paiement</label>
+              <input type="datetime-local" class="form-control" formControlName="datePayment" />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check2-circle"></i> Enregistrer
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="closePopup()">
+              <i class="bi bi-x-circle"></i> Annuler
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

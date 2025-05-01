@@ -1,0 +1,76 @@
+<div class="container mt-4">
+  <h2 class="mb-3">
+    <i class="bi bi-people-fill me-2"></i> Liste des clients
+  </h2>
+
+  <div class="mb-3">
+    <input
+      type="text"
+      class="form-control shadow-sm"
+      placeholder="🔍 Rechercher un client..."
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered text-center align-middle shadow-sm bg-white rounded">
+      <thead class="table-dark">
+        <tr>
+          <th>Raison sociale</th>
+          <th>Contact</th>
+          <th>Adresse</th>
+          <th>Ville</th>
+          <th>Code postal</th>
+          <th>Téléphone</th>
+          <th>Email</th>
+          <th>ICE</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of filteredClients">
+          <td >{{ client.nameEnterprise }}</td>
+          <td>{{ client.nameContact }}</td>
+          <td>{{ client.address }}</td>
+          <td>{{ client.ville }}</td>
+          <td>{{ client.codePostal }}</td>
+          <td>{{ client.phoneNumber }}</td>
+          <td class="fw-bold text-primary">{{ client.mail_address }}</td>
+          <td>{{ client.ice }}</td>
+          <td>
+            <div class="dropdown">
+              <button
+                class="btn btn-outline-secondary btn-sm dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="bi bi-three-dots"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <button class="dropdown-item" (click)="editClient(client.id)">
+                    <i class="bi bi-pencil-square"></i> Modifier
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item text-danger" (click)="deleteClient(client.id)">
+                    <i class="bi bi-trash"></i> Supprimer
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noClients>
+    <p class="alert alert-warning">Aucun client enregistré pour le moment.</p>
+  </ng-template>
+
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+    {{ errorMessage }}
+  </div>
+</div>
