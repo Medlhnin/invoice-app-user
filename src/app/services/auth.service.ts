@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment.prod';
   providedIn: 'root'
 })
 export class AuthService {
-  private BASE_URL = environment.BASE_URL+'/api/v1/user';
+  private BASE_URL = environment.BASE_URL_LOCAL+'/api/v1/user';
   private authTokenKey = 'auth_token';
 
   private authStatus = new BehaviorSubject<boolean>(this.isAuthenticated()); 

@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment.prod';
 export class ScheduledInvoiceService {
 
   constructor(private http: HttpClient) { }
-  private BASE_URL = environment.BASE_URL+'/api/v1/scheduled-invoices';
+  private BASE_URL = environment.BASE_URL_LOCAL+'/api/v1/scheduled-invoices';
 
   createScheduledInvoice(scheduledInvoice: any) {
     return this.http.post(`${this.BASE_URL}`, scheduledInvoice); 
