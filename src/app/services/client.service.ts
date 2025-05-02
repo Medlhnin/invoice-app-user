@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment.prod';
 })
 export class ClientService {
 
-  private BASE_URL = environment.BASE_URL_LOCAL+'/api/v1/client';
+  private BASE_URL = environment.BASE_URL+'/api/v1/client';
 
   constructor(private http:HttpClient) { }
 

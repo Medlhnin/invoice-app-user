@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment.prod';
 })
 export class InvoiceService {
 
-  private BASE_URL = environment.BASE_URL_LOCAL+'/api/v1/invoice';
+  private BASE_URL = environment.BASE_URL+'/api/v1/invoice';
 
   constructor(private http: HttpClient) {}
 
