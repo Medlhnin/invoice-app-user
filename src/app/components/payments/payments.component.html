@@ -1,0 +1,63 @@
+<h2 class="mb-4"><i class="bi bi-credit-card"></i> Liste des paiements</h2>
+
+<div class="input-group mb-3">
+  <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+  <input type="text" class="form-control" [(ngModel)]="searchTerm" placeholder="Rechercher par entreprise ou note..." />
+</div>
+
+<div class="row mb-3">
+  <div class="col-md-4">
+    <select class="form-select" [(ngModel)]="paymentMethodFilter">
+      <option value="">Toutes les méthodes</option>
+      <option *ngFor="let method of paymentMethods" [value]="method">
+        {{ method | paymentMethod }}
+      </option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <input type="date" class="form-control" [(ngModel)]="dateFilter" />
+  </div>
+</div>
+
+<div class="table-responsive shadow-sm rounded">
+  <table *ngIf="filteredPayments.length > 0; else noPayments" class="table table-hover table-bordered align-middle">
+    <thead class="table-dark text-center">
+      <tr>
+        <th>Numéro chronologique</th>
+        <th>Nom de l'entreprise</th>
+        <th>Montant</th>
+        <th>Date de paiement</th>
+        <th>Méthode de paiement</th>
+        <th>Numéro de chèque</th>
+        <th>Numéro de remise</th>
+        <th>Note</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let payment of filteredPayments" class="text-center">
+        <td>{{ payment.invoice.numeroChronologique }}</td>
+        <td>{{ payment.invoice.client.nameEnterprise }}</td>
+        <td>{{ payment.amount }} DH</td>
+        <td>{{ payment.paymentDate | date: 'short' }}</td>
+        <td>{{ payment.paymentMethod | paymentMethod }}</td>
+        <td>{{ payment.cheque_number || 'N/A' }}</td>
+        <td>{{ payment.remise_number || 'N/A' }}</td>
+        <td>{{ payment.notes }}</td>
+        <td>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline-danger" (click)="deletePayment(payment.id)"><i class="bi bi-trash"></i></button>
+            <button class="btn btn-sm btn-outline-primary" (click)="editPayment(payment.id)"><i class="bi bi-pencil-square"></i></button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noPayments>
+  <div class="alert alert-info mt-4">Aucun paiement disponible pour le moment.</div>
+</ng-template>
+
+<div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+

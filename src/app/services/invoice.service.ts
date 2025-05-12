@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, tap, throwError } from 'rxjs';
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,6 @@ export class InvoiceService {
       }),
       catchError((error) => {
         console.error('Erreur lors de la récupération des factures:', error);
-        // Tu peux ici afficher une notification ou retourner une valeur vide
         return throwError(() => new Error('Une erreur est survenue lors du chargement des factures.'));
       })
     );
@@ -43,10 +42,6 @@ export class InvoiceService {
         return throwError(() => new Error('Une erreur est survenue lors de la suppression de la facture.'));
       })
     );
-  }
-
-  payInvoice(id: number, paymentData: any): Observable<any> { 
-    return this.http.put(`${this.BASE_URL}/${id}/payment`, paymentData);
   }
 
   validateInvoice(id: number): Observable<any> {

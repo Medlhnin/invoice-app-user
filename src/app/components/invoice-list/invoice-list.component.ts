@@ -3,12 +3,13 @@ import { InvoiceService } from '../../services/invoice.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PaymentService } from '../../services/payment.service';
 
 
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
-  imports: [RouterModule, CommonModule, ReactiveFormsModule, FormsModule ],
+  imports: [RouterModule, CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.css'
 })
@@ -19,16 +20,19 @@ export class InvoiceListComponent implements OnInit {
   searchTerm: string = '';
   statusFilter: string = '';
   dateFilter: string = '';
-  invoiceStatuses: string[] = ['Draft','Valid', 'Sent', 'Pending', 'Overdue', 'Paid'];
+  invoiceStatuses: string[] = ['Draft','Valid', 'Sent', 'Pending', 'Overdue', 'Paid', 'partiallyPaid'];
 
   paymentForm = this.fb.group({
     paymentMethod: ['TRANSFER', Validators.required],
     cheque_number: [null],
     remise_number: [null],
+    amount: [0, Validators.required],
+    notes: ['', Validators.required],
     datePayment : ['', Validators.required]
   });
 
   constructor(private invoiceService: InvoiceService,
+              private paymentService: PaymentService,
               private fb: FormBuilder,
               private router: Router){}
 
@@ -66,6 +70,7 @@ export class InvoiceListComponent implements OnInit {
       remise_number: null
     });
   }
+
   closePopup() {
     this.selectedInvoice = null;
   }
@@ -75,7 +80,7 @@ export class InvoiceListComponent implements OnInit {
       ...this.paymentForm.value
     };
     
-    this.invoiceService.payInvoice(this.selectedInvoice.id, data).subscribe({
+    this.paymentService.payInvoice(this.selectedInvoice.id, data).subscribe({
       next: (res) => {
         this.selectedInvoice = null;
         console.log('Paiement effectué avec succès:', res);
@@ -88,11 +93,11 @@ export class InvoiceListComponent implements OnInit {
 
       }
     });
-
   }
 
   get filteredInvoices() {
     return this.invoices.filter(invoice => {
+      
       const matchesSearch = !this.searchTerm ||
         invoice.client?.nameEnterprise?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         invoice.projectDescription?.toLowerCase().includes(this.searchTerm.toLowerCase());

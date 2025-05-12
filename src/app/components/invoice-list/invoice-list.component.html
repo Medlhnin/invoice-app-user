@@ -18,16 +18,17 @@
 </div>
 
 <div class="table-responsive shadow-sm rounded">
-  <table *ngIf="filteredInvoices.length > 0; else noInvoices" class="table table-hover table-bordered align-middle">
+  <table *ngIf="filteredInvoices.length > 0" class="table table-hover table-bordered align-middle">
     <thead class="table-dark text-center">
       <tr>
+        <th>Numéro chronologique</th>
         <th>Client</th>
         <th class="description-cell">Description</th>
         <th>Montant HT</th>
-        <th>TVA</th>
         <th>Frais & Débours</th>
         <th>Acompte</th>
         <th>Total</th>
+        <th>Reste à payer</th>
         <th>Date</th>
         <th>Statut</th>
         <th>Actions</th>
@@ -35,32 +36,34 @@
     </thead>
     <tbody>
       <tr *ngFor="let invoice of filteredInvoices" class="text-center">
+        <td>{{invoice.numeroChronologique}}</td>
         <td>{{ invoice.client?.nameEnterprise }}</td>
         <td class="description-cell" [title]="invoice.projectDescription">{{ invoice.projectDescription }}</td>
         <td>{{ invoice.amount }} DH</td>
-        <td>{{ invoice.tva }} %</td>
         <td>{{ invoice.fees_disbursements }} DH</td>
         <td>{{ invoice.deposit }} DH</td>
-        <td class="fw-bold text-success">
-          {{ invoice.amount + invoice.fees_disbursements + (invoice.amount * invoice.tva / 100) - invoice.deposit }} DH
-        </td>
+        <td class="fw-bold text-success">{{ invoice.amount + invoice.fees_disbursements + (invoice.amount * invoice.tva / 100) - invoice.deposit }} DH</td>
+        <td>{{ invoice.amount + invoice.fees_disbursements + (invoice.amount * invoice.tva / 100) - invoice.deposit - invoice.amountPaid }} DH</td>
         <td>{{ invoice.dateFacture | date: 'short' }}</td>
-        <td><span class="badge bg-secondary">{{ invoice.invoiceStatus }}</span></td>
+        <td>
+          <span class="badge" [ngClass]="{
+              'bg-warning': invoice.invoiceStatus === 'Draft',
+              'bg-success': invoice.invoiceStatus === 'Valid' || invoice.invoiceStatus === 'Paid',
+              'bg-info': invoice.invoiceStatus === 'Sent',
+              'bg-primary': invoice.invoiceStatus === 'Pending',
+              'bg-danger': invoice.invoiceStatus === 'Overdue',
+              'bg-dark': invoice.invoiceStatus === 'partiallyPaid'
+            }">
+              {{ invoice.invoiceStatus }}
+          </span>
+        </td>
         <td>
           <div class="btn-group">
-            
-            <button class="btn btn-sm btn-outline-danger" (click)="deleteInvoice(invoice.id)">
-              <i class="bi bi-trash"></i>
-            </button>
-            <button class="btn btn-sm btn-outline-success" (click)="openPaymentPopup(invoice)">
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteInvoice(invoice.id)"><i class="bi bi-trash"></i></button>
+            <button class="btn btn-sm btn-outline-success" (click)="openPaymentPopup(invoice)" [disabled]="invoice.invoiceStatus !== 'Sent' && invoice.invoiceStatus !== 'Pending' && invoice.invoiceStatus !== 'partiallyPaid'">
               <i class="bi bi-cash-coin"></i>
             </button>
-            <!-- <button class="btn btn-sm btn-outline-primary" (click)="validateInvoice(invoice.id)" [disabled]="invoice.invoiceStatus !== 'Draft'">
-              <i class="bi bi-check2-square"></i>
-            </button> -->
-            <button class="btn btn-sm btn-outline-primary" (click)="editInvoice(invoice.id)">
-              <i class="bi bi-pencil-square"></i>
-            </button>
+            <button class="btn btn-sm btn-outline-primary" (click)="editInvoice(invoice.id)"><i class="bi bi-pencil-square"></i></button>
           </div>
         </td>
       </tr>
@@ -92,6 +95,21 @@
               <option value="CHEQUE">Chèque</option>
               <option value="CASH"> Espèce</option>
             </select>
+
+             <div class="mb-3">
+              <label class="form-label">Montant</label>
+              <input type="number" class="form-control" formControlName="amount" />
+            </div>
+
+             <div class="mb-3">
+              <label class="form-label">Date de paiement</label>
+              <input type="datetime-local" class="form-control" formControlName="datePayment" />
+            </div>
+
+             <div class="mb-3">
+              <label class="form-label">notes</label>
+              <input type="text" class="form-control" formControlName="notes" />
+            </div>
           </div>
 
           <div *ngIf="paymentForm.value.paymentMethod === 'CHEQUE'">

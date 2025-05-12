@@ -9,6 +9,7 @@ import { SignInComponent } from './components/auth/sign-in/sign-in.component';
 import { PublicGuard } from './shared/guards/public.guard';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { UserComponent } from './components/user/user.component';
+import { PaymentsComponent } from './components/payments/payments.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'sign-in', pathMatch: 'full' },
@@ -23,6 +24,7 @@ export const routes: Routes = [
     { path: 'sign-in', component: SignInComponent, canActivate: [PublicGuard] },
     { path: 'settings', component: UserComponent, canActivate: [AuthGuard] },
     { path: 'edit-invoice/:id', component: CreateInvoiceComponent, canActivate: [AuthGuard] },
+    { path: 'payments', component: PaymentsComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: 'sign-in' }
 
 ];
